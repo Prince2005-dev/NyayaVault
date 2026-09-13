@@ -8,7 +8,7 @@ import { DocumentUploadService } from '../services/document-upload.service.js';
 import { DocumentSealingService } from '../sealing/sealing.service.js';
 import { AuditService } from '../audit/audit.service.js';
 import { AesGcmEncryptionService } from '../encryption/aes-gcm.service.js';
-import { LocalEncryptedStorage } from '../storage/local-encrypted-storage.js';
+import { LocalEncryptedStorage, S3Storage } from '../storage/index.js';
 import { EthersBlockchainService } from '../blockchain/ethers-blockchain.service.js';
 import type { BlockchainService } from '../blockchain/blockchain.types.js';
 import { loadEncryptionConfig, loadStorageConfig } from '../config/encryption.config.js';
@@ -25,9 +25,31 @@ import {
   BlockchainUnavailableError,
 } from '../errors/domain.errors.js';
 
-function createDefaultStorageService(): LocalEncryptedStorage {
+function createDefaultStorageService(): StorageService {
   const storageConfig = loadStorageConfig();
-  return new LocalEncryptedStorage(storageConfig.storageRootDir);
+
+  if (storageConfig.provider === 'local') {
+    return new LocalEncryptedStorage(storageConfig.storageRootDir);
+  }
+
+  if (
+    !storageConfig.bucketName ||
+    !storageConfig.region ||
+    !storageConfig.accessKeyId ||
+    !storageConfig.secretAccessKey
+  ) {
+    throw new Error(
+      'S3 storage requires AWS_S3_BUCKET_NAME, AWS_REGION, AWS_ACCESS_KEY_ID, and AWS_SECRET_ACCESS_KEY.'
+    );
+  }
+
+  return new S3Storage({
+    bucketName: storageConfig.bucketName,
+    region: storageConfig.region,
+    endpoint: storageConfig.endpoint,
+    accessKeyId: storageConfig.accessKeyId,
+    secretAccessKey: storageConfig.secretAccessKey,
+  });
 }
 
 function createDefaultEncryptionService(): AesGcmEncryptionService {

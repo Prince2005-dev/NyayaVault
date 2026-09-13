@@ -32,7 +32,7 @@ blockchain/cache/
 blockchain/typechain-types/
 
 # Secure Encrypted Storage & Test Storage Runs
-storage/
+/storage/
 backend/storage/
 .tmp_test_storage*
 backend/.tmp_test_storage*
