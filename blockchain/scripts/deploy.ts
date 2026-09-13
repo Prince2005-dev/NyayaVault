@@ -1,7 +1,7 @@
-import { ethers } from 'hardhat';
+import { ethers, network } from 'hardhat';
 
 async function main() {
-  console.log('Deploying DocumentIntegrityRegistry to local in-process network...');
+  console.log(`Deploying DocumentIntegrityRegistry to ${network.name} network...`);
 
   const [deployer] = await ethers.getSigners();
   console.log('Deploying with account:', deployer.address);
