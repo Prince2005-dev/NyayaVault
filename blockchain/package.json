@@ -6,7 +6,7 @@
     "compile": "hardhat compile",
     "node": "hardhat node",
     "test": "hardhat test",
-    "deploy:local": "hardhat run scripts/deploy.ts --network localhost"
+    "deploy:local": "hardhat run scripts/deploy.ts --network sepolia"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
@@ -14,5 +14,8 @@
     "@types/node": "^24.13.3",
     "hardhat": "^2.22.18",
     "typescript": "~5.7.2"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
   }
 }
