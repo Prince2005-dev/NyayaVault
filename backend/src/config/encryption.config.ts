@@ -62,8 +62,16 @@ export interface EncryptionConfig {
   keyVersion: string;
 }
 
+export type StorageProvider = 'local' | 's3';
+
 export interface StorageConfig {
+  provider: StorageProvider;
   storageRootDir: string;
+  bucketName?: string;
+  region?: string;
+  endpoint?: string;
+  accessKeyId?: string;
+  secretAccessKey?: string;
 }
 
 /**
@@ -83,8 +91,18 @@ export function loadEncryptionConfig(): EncryptionConfig {
  */
 export function loadStorageConfig(): StorageConfig {
   initializeEnvironment();
+
+  const provider = process.env.STORAGE_PROVIDER === 's3' ? 's3' : 'local';
   const rawDir = process.env.STORAGE_ROOT_DIR || './storage';
   const storageRootDir = path.resolve(rawDir);
 
-  return { storageRootDir };
+  return {
+    provider,
+    storageRootDir,
+    bucketName: process.env.AWS_S3_BUCKET_NAME,
+    region: process.env.AWS_REGION,
+    endpoint: process.env.AWS_S3_ENDPOINT,
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  };
 }
