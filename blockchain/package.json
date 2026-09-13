@@ -1,0 +1,18 @@
+{
+  "name": "nyayavault-blockchain",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "compile": "hardhat compile",
+    "node": "hardhat node",
+    "test": "hardhat test",
+    "deploy:local": "hardhat run scripts/deploy.ts --network localhost"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^24.13.3",
+    "hardhat": "^2.22.18",
+    "typescript": "~5.7.2"
+  }
+}

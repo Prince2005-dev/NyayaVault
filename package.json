@@ -1,0 +1,18 @@
+{
+  "name": "nyayavault",
+  "private": true,
+  "scripts": {
+    "chain:node": "npm run node --prefix blockchain",
+    "chain:deploy": "npm run deploy:local --prefix blockchain",
+    "backend:setup": "npm run db:setup --prefix backend",
+    "backend:start": "npm run start --prefix backend",
+    "frontend:dev": "npm run dev --prefix frontend",
+    "dev": "npm run dev --prefix frontend",
+    "build": "npm run build --prefix frontend",
+    "preview": "npm run preview --prefix frontend",
+    "test:backend": "npm test --prefix backend",
+    "test:blockchain": "npm test --prefix blockchain",
+    "db:docker:up": "docker compose up -d",
+    "db:docker:down": "docker compose down"
+  }
+}

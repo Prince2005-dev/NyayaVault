@@ -1,0 +1,32 @@
+{
+  "name": "nyayavault-backend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "clean": "node -e \"import('node:fs').then(fs => fs.rmSync('dist', { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }))\"",
+    "build": "npm run clean && tsc",
+    "start": "node dist/server.js",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && node --test --test-concurrency=1 dist/**/*.test.js",
+    "db:migrate": "prisma migrate deploy",
+    "db:seed": "node dist/database/seed.js",
+    "db:setup": "npm run build && prisma migrate deploy && node dist/database/seed.js"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.2.0",
+    "@types/node": "^24.13.3",
+    "prisma": "^6.4.1",
+    "typescript": "~5.7.2"
+  },
+  "dependencies": {
+    "@node-rs/argon2": "^2.2.1",
+    "@prisma/client": "^6.4.1",
+    "ethers": "^6.13.5",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "multer": "^2.3.0"
+  }
+}
