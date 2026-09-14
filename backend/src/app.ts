@@ -231,6 +231,9 @@ export function createApp(options: CreateAppOptions = {}): Express {
       return;
     }
 
+    // Temporary production diagnostic: log unexpected errors server-side only.
+    console.error(`[${_req.id}] INTERNAL_ERROR`, err);
+
     // Handle unexpected internal errors (never expose stack traces or raw sensitive error messages)
     res.status(500).json({
       error: {
