@@ -89,7 +89,30 @@ function createDefaultSealingService(): DocumentSealingService {
   const encConfig = loadEncryptionConfig();
   const encryptionService = new AesGcmEncryptionService(encConfig.key, encConfig.keyVersion);
   const storageConfig = loadStorageConfig();
-  const storageService = new LocalEncryptedStorage(storageConfig.storageRootDir);
+  let storageService: StorageService;
+
+if (storageConfig.provider === 'local') {
+  storageService = new LocalEncryptedStorage(storageConfig.storageRootDir);
+} else {
+  if (
+    !storageConfig.bucketName ||
+    !storageConfig.region ||
+    !storageConfig.accessKeyId ||
+    !storageConfig.secretAccessKey
+  ) {
+    throw new Error(
+      'S3 storage requires AWS_S3_BUCKET_NAME, AWS_REGION, AWS_ACCESS_KEY_ID, and AWS_SECRET_ACCESS_KEY.'
+    );
+  }
+
+  storageService = new S3Storage({
+    bucketName: storageConfig.bucketName,
+    region: storageConfig.region,
+    endpoint: storageConfig.endpoint,
+    accessKeyId: storageConfig.accessKeyId,
+    secretAccessKey: storageConfig.secretAccessKey,
+  });
+}
 
   let blockchainService: BlockchainService;
   try {
@@ -121,7 +144,30 @@ function createDefaultVerificationService(): DocumentVerificationService {
   const encConfig = loadEncryptionConfig();
   const encryptionService = new AesGcmEncryptionService(encConfig.key, encConfig.keyVersion);
   const storageConfig = loadStorageConfig();
-  const storageService = new LocalEncryptedStorage(storageConfig.storageRootDir);
+let storageService: StorageService;
+
+if (storageConfig.provider === 'local') {
+  storageService = new LocalEncryptedStorage(storageConfig.storageRootDir);
+} else {
+  if (
+    !storageConfig.bucketName ||
+    !storageConfig.region ||
+    !storageConfig.accessKeyId ||
+    !storageConfig.secretAccessKey
+  ) {
+    throw new Error(
+      'S3 storage requires AWS_S3_BUCKET_NAME, AWS_REGION, AWS_ACCESS_KEY_ID, and AWS_SECRET_ACCESS_KEY.'
+    );
+  }
+
+  storageService = new S3Storage({
+    bucketName: storageConfig.bucketName,
+    region: storageConfig.region,
+    endpoint: storageConfig.endpoint,
+    accessKeyId: storageConfig.accessKeyId,
+    secretAccessKey: storageConfig.secretAccessKey,
+  });
+}
 
   let blockchainService: BlockchainService;
   try {

@@ -8,7 +8,7 @@ import { AuditService } from '../audit/audit.service.js';
 import { calculateSha256 } from '../integrity/hash.service.js';
 import { AesGcmEncryptionService } from '../encryption/aes-gcm.service.js';
 import { serializeEncryptedPayload, type EncryptionService } from '../encryption/encryption.types.js';
-import { LocalEncryptedStorage } from '../storage/local-encrypted-storage.js';
+import { LocalEncryptedStorage, S3Storage } from '../storage/index.js';
 import type { StorageService } from '../storage/storage.types.js';
 import { CaseAuthorizationService, type AuthUserContext } from './case-authorization.service.js';
 import { validateUploadedFile, type ValidatedFile } from './file-validator.js';
@@ -63,7 +63,29 @@ export class DocumentUploadService {
       this.storageService = dependencies.storageService;
     } else {
       const storageConfig = loadStorageConfig();
-      this.storageService = new LocalEncryptedStorage(storageConfig.storageRootDir);
+
+if (storageConfig.provider === 'local') {
+  this.storageService = new LocalEncryptedStorage(storageConfig.storageRootDir);
+} else {
+  if (
+    !storageConfig.bucketName ||
+    !storageConfig.region ||
+    !storageConfig.accessKeyId ||
+    !storageConfig.secretAccessKey
+  ) {
+    throw new Error(
+      'S3 storage requires AWS_S3_BUCKET_NAME, AWS_REGION, AWS_ACCESS_KEY_ID, and AWS_SECRET_ACCESS_KEY.'
+    );
+  }
+
+  this.storageService = new S3Storage({
+    bucketName: storageConfig.bucketName,
+    region: storageConfig.region,
+    endpoint: storageConfig.endpoint,
+    accessKeyId: storageConfig.accessKeyId,
+    secretAccessKey: storageConfig.secretAccessKey,
+  });
+}
     }
   }
 
